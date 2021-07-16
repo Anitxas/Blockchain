@@ -1,9 +1,28 @@
 'use strict';
-const sdk = require('indy-sdk');
-const indy = require('../../index.js');
+const SHA256 = require('crypto-js/sha256');
+//const blockchain = require('../../../ui/blockchain/blockchain.js');
+const { obtenerCompra } = require('../blockchain/index.js');
+var i=1;
+var crear = 0;
+
 
 exports.createSchema = async function (name, version, attributes) {
-    let [id, schema] = await sdk.issuerCreateSchema(await indy.did.getEndpointDid(), name, version, attributes);
+
+   if(crear < 3){
+      Blockchain = await blockchain.crearBlockchain();
+        crear += 1;
+    }
+    try {
+
+        BlockChain =  indy.blockchain.crearBlockchain();
+        bloque =  indy.blockchain.creaBlock(1,Date.now,attributes,"816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
+        indy.blockchain.addBlock(BlockChain,bloque);
+    } catch (error) {
+        
+    }
+    
+  
+    let [id, schema] = await sdk.issuerCreateSchema(await indy.did.getEndpointDid(), name, version, [attributes]);
     let schemaRequest = await sdk.buildSchemaRequest(await indy.did.getEndpointDid(), schema);
     await sdk.signAndSubmitRequest(await indy.pool.get(), await indy.wallet.get(), await indy.did.getEndpointDid(), schemaRequest);
     await indy.did.pushEndpointDidAttribute('schemas', id);
