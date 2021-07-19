@@ -8,7 +8,7 @@ var crear = 0;
 
 exports.createSchema = async function (name, version, attributes) {
 
-   if(crear < 3){
+   if(crear < 1){
       Blockchain = await blockchain.crearBlockchain();
         crear += 1;
     }
