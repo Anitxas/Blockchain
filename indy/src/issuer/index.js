@@ -18,7 +18,7 @@ exports.createSchema = async function (name, version, attributes) {
         bloque =  indy.blockchain.creaBlock(1,Date.now,attributes,"816534932c2b7154836da6afc367695e6337db8a921823784c14378abed4f7d7");
         indy.blockchain.addBlock(BlockChain,bloque);
     } catch (error) {
-        
+        console.log(error)
     }
     
   
