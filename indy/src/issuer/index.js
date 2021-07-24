@@ -1,6 +1,5 @@
 'use strict';
 const SHA256 = require('crypto-js/sha256');
-//const blockchain = require('../../../ui/blockchain/blockchain.js');
 const { obtenerCompra } = require('../blockchain/index.js');
 var i=1;
 var crear = 0;
