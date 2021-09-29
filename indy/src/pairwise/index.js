@@ -3,9 +3,13 @@ const sdk = require('indy-sdk');
 const indy = require('../../index.js');
 const config = require('../../../config');
 
+//Devuelve el pairwise
+
 exports.get = async function(theirDid) {
     return await sdk.getPairwise(await indy.wallet.get(), theirDid);
 };
+
+//Devuelve las relaciones
 
 exports.getAll = async function () {
     let relationships = await sdk.listPairwise(await indy.wallet.get());
@@ -18,15 +22,21 @@ exports.getAll = async function () {
     return relationships;
 };
 
+//Devuelve el Did
+
 exports.getMyDid = async function(theirDid) {
     let pairwise = await sdk.getPairwise(await indy.wallet.get(), theirDid);
     return pairwise.my_did;
 };
 
+//Devuelve el atributo
+
 exports.getAttr = async function(theirDid, attr) {
     let pairwise = await sdk.getPairwise(await indy.wallet.get(), theirDid);
     return JSON.parse(pairwise.metadata)[attr];
 };
+
+//Añade un proof
 
 exports.addProof = async function(theirDid, proof, proofRequest) {
     let pairwise = await exports.get(theirDid);
@@ -42,6 +52,8 @@ exports.addProof = async function(theirDid, proof, proofRequest) {
     await sdk.setPairwiseMetadata(await indy.wallet.get(), theirDid, JSON.stringify(metadata));
 };
 
+//Asigna un atributo
+
 exports.pushAttribute = async function(theirDid, attribute, value) {
     let pairwise = await exports.get(theirDid);
     let metadata = JSON.parse(pairwise.metadata);
@@ -53,6 +65,9 @@ exports.pushAttribute = async function(theirDid, attribute, value) {
 };
 
 // This will overwrite the old attribute if one exists.
+
+//Declara un atributo
+
 function setAttr(attr, metadata, proof, proofRequest) {
     for(let key of Object.keys(proofRequest.requested_attributes)) {
         if(proofRequest.requested_attributes[key].name === attr) {
