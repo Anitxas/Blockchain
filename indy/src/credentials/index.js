@@ -3,6 +3,9 @@ const sdk = require('indy-sdk');
 const indy = require('../../index.js');
 const utils = require('../utils');
 
+/**
+ * Establece los tipos de mensajes
+ */
 const MESSAGE_TYPES = {
   OFFER: "urn:sovrin:agent:message_type:sovrin.org/credential_offer",
   REQUEST: "urn:sovrin:agent:message_type:sovrin.org/credential_request",
@@ -10,11 +13,28 @@ const MESSAGE_TYPES = {
 };
 exports.MESSAGE_TYPES = MESSAGE_TYPES;
 
+/**
+ * 
+ */
 exports.handlers = require('./handlers');
 
+/**
+ * Funcion que devuelve todas las credenciales
+ * @returns 
+ */
 exports.getAll = async function () {
   return await sdk.proverGetCredentials(await indy.wallet.get(), {});
 };
+
+/**
+ * 
+ * @param {*} theirDid 
+ * @param {*} credentialDefinitionId 
+ * @param {*} credentialData 
+ * @returns 
+ */
+
+//Envia una oferta con una credencial que identifica al emisor.
 
 exports.sendOffer = async function (theirDid, credentialDefinitionId, credentialData) {
   if (theirDid === '_self_') {
@@ -38,6 +58,8 @@ exports.sendOffer = async function (theirDid, credentialDefinitionId, credential
   }
 };
 
+//Envia un request para identificar al receptor
+
 exports.sendRequest = async function (theirDid, encryptedMessage) {
   let myDid = await indy.pairwise.getMyDid(theirDid);
   let credentialOffer = await indy.crypto.authDecrypt(myDid, encryptedMessage);
@@ -49,6 +71,8 @@ exports.sendRequest = async function (theirDid, encryptedMessage) {
   let theirEndpointDid = await indy.did.getTheirEndpointDid(theirDid);
   return indy.crypto.sendAnonCryptedMessage(theirEndpointDid, message);
 };
+
+//Acepta un request
 
 exports.acceptRequest = async function (theirDid, encryptedMessage) {
   let myDid = await indy.pairwise.getMyDid(theirDid);
@@ -84,6 +108,8 @@ exports.acceptRequest = async function (theirDid, encryptedMessage) {
   indy.store.pendingCredentialOffers.delete(pendingCredOfferId);
 };
 
+//Acepta la credencial del receptor del request
+
 exports.acceptCredential = async function (theirDid, encryptedMessage) {
   let myDid = await indy.pairwise.getMyDid(theirDid);
   let credential = await await indy.crypto.authDecrypt(myDid, encryptedMessage);
@@ -101,6 +127,8 @@ exports.acceptCredential = async function (theirDid, encryptedMessage) {
   let credentials = await indy.credentials.getAll();
   console.log(credentials);
 };
+
+//Codifica un string
 
 exports.encode = function (string) {
   console.log(string);
@@ -120,6 +148,8 @@ exports.encode = function (string) {
   console.log(number);
   return number;
 };
+
+//Decodifica un número
 
 exports.decode = function (number) {
   console.log(number);
